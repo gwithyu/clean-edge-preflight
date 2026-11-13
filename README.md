@@ -4,9 +4,13 @@ A read-only static local-dependency preflight for JS, JSX, TS, TSX and CommonJS 
 
 ## Run
 
-In the extracted tool directory:
+Requires Node.js 20 or newer, npm and Git.
+
+Clone and verify the tool:
 
 ```sh
+git clone https://github.com/gwithyu/clean-edge-preflight.git
+cd clean-edge-preflight
 npm ci --ignore-scripts
 npm test
 npm run verify:package
@@ -17,6 +21,28 @@ From the project you want to check:
 ```sh
 node /absolute/path/to/clean-edge-preflight/index.cjs src/main.jsx
 ```
+
+### Use in your project
+
+From your own project's root directory, install the verified 0.1.0 source snapshot directly from GitHub:
+
+```sh
+npm install --save-dev --ignore-scripts git+https://github.com/gwithyu/clean-edge-preflight.git#55aeb3b00bbee2c85c45321d1a99a8d36b8c4f65
+npx --no-install clean-edge src/main.jsx
+```
+
+The Git dependency is pinned to the verified commit. Direct installation, API import and local npx exits 0/1/2 have been checked in a separate project. The package is not published to the npm registry.
+
+To use the installed API:
+
+```js
+const { check } = require('clean-edge-preflight');
+const result = check(['src/main.jsx']);
+console.log(result);
+process.exitCode = result.ok ? 0 : 1;
+```
+
+### Build a local tarball
 
 To install the CLI locally, run `npm pack` in the tool directory and install that generated tarball in your project. An automatic prepack guard checks the actual npm file list against the explicit allowlist and stops on missing or unexpected files. This includes npm-forced README/LICENSE files that a files list alone cannot exclude. The npm package is not publicly published.
 
